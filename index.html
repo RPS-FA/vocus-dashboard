@@ -79,7 +79,7 @@
 <body>
 <div class="header">
   <div><h1>Vocus Monitoring Dashboard</h1><div class="subtitle">Análise TCA — Folha Link | Filtros por Dia/Semana/Mês, Máquina e Classe</div></div>
-  <div style="text-align:right"><div class="period">Out 2025 - Set 2026</div><div style="font-size:11px;opacity:.6;margin-top:4px">Atualizado: 24/09/2026 17:17</div></div>
+  <div style="text-align:right"><div class="period">Out 2025 - Set 2026</div><div style="font-size:11px;opacity:.6;margin-top:4px">Atualizado: 24/09/2026 17:21</div></div>
 </div>
 <div class="container">
   <div class="tab-bar">
@@ -733,7 +733,7 @@ function updateOps(){
 function p_or(a,b,c){return a||b||c}
 /* /OPS-JS */
 
-const CLASS_LIMITS={1:[{v:0.5,l:'Limite 0,5 ng/L'}],2:[{v:0.5,l:'Limite inf 0,5 ng/L'},{v:1.0,l:'Limite sup 1,0 ng/L'}],3:[{v:1.0,l:'Limite inf 1,0 ng/L'},{v:2.0,l:'Limite sup 2,0 ng/L'}],4:[{v:2.0,l:'Limite 2,0 ng/L'}]};
+const CLASS_LIMITS={1:[{v:0.5,l:'Limite 0,5 ng/L'},{v:1.0,l:'Limite 1,0 ng/L',c:'#f59e0b',d:[2,3]}],2:[{v:0.5,l:'Limite inf 0,5 ng/L'},{v:1.0,l:'Limite sup 1,0 ng/L'}],3:[{v:1.0,l:'Limite inf 1,0 ng/L'},{v:2.0,l:'Limite sup 2,0 ng/L'}],4:[{v:2.0,l:'Limite 2,0 ng/L'}]};
 const MN={'01':'Jan','02':'Fev','03':'Mar','04':'Abr','05':'Mai','06':'Jun','07':'Jul','08':'Ago','09':'Set','10':'Out','11':'Nov','12':'Dez'};
 
 function fmtLabel(l,g){
@@ -870,7 +870,7 @@ function updateAll(){
   function buildMaxDS(data,labels,color,mLabel){
     const pr=labels.length>100?0:labels.length>50?1:2;
     const ds=[{label:'Max R-TCA '+mLabel,data:data.map(r=>r.max_rtca),borderColor:color,fill:false,tension:0,pointRadius:pr,borderWidth:1.5,pointBackgroundColor:color}];
-    limits.forEach((lim,i)=>{ds.push({label:lim.l,data:Array(labels.length).fill(lim.v),borderColor:limColors[i]||'#ef4444',borderDash:[6,4],borderWidth:1.5,pointRadius:0,fill:false})});
+    limits.forEach((lim,i)=>{ds.push({label:lim.l,data:Array(labels.length).fill(lim.v),borderColor:lim.c||limColors[i]||'#ef4444',borderDash:lim.d||[6,4],borderWidth:1.5,pointRadius:0,fill:false})});
     return ds;
   }
 
@@ -1110,7 +1110,7 @@ function updatePs(){
   function buildPsDS(data,labels,color,mLabel){
     const pr=labels.length>100?0:labels.length>50?1:2;
     const ds=[{label:'Max R-TCA '+mLabel,data:data.map(r=>r.max_rtca),borderColor:color,fill:false,tension:0,pointRadius:pr,borderWidth:1.5,pointBackgroundColor:color}];
-    limits.forEach((lim,i)=>{ds.push({label:lim.l,data:Array(labels.length).fill(lim.v),borderColor:limColors[i]||'#ef4444',borderDash:[6,4],borderWidth:1.5,pointRadius:0,fill:false})});
+    limits.forEach((lim,i)=>{ds.push({label:lim.l,data:Array(labels.length).fill(lim.v),borderColor:lim.c||limColors[i]||'#ef4444',borderDash:lim.d||[6,4],borderWidth:1.5,pointRadius:0,fill:false})});
     return ds;
   }
 
