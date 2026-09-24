@@ -80,7 +80,7 @@
 <body>
 <div class="header">
   <div><h1>Vocus Monitoring Dashboard</h1><div class="subtitle">Análise TCA — Folha Link | Filtros por Dia/Semana/Mês, Máquina e Classe</div></div>
-  <div style="text-align:right"><div class="period">Out 2025 - Set 2026</div><div style="font-size:11px;opacity:.6;margin-top:4px">Atualizado: 24/09/2026 17:25</div></div>
+  <div style="text-align:right"><div class="period">Out 2025 - Set 2026</div><div style="font-size:11px;opacity:.6;margin-top:4px">Atualizado: 24/09/2026 17:29</div></div>
 </div>
 <div class="container">
   <div class="tab-bar">
@@ -144,11 +144,6 @@
           <button onclick="toggleCruCat('PS-SUBER LAB',this)" class="active">PS-SUBER LAB</button>
           <button onclick="toggleCruCat('PS-CTCOR',this)" class="active">PS-CTCOR</button>
           <button onclick="toggleCruCat('PS-CEVAQOE',this)" class="active">PS-CEVAQOE</button>
-        </div>
-      </div>
-      <div class="filter-group"><label>Tipo:</label>
-        <div class="btn-group" id="cruTipoBtns">
-          <button onclick="setCruTipo('Aprovados')" class="active">Aprovados</button>
         </div>
       </div>
       <div class="filter-group" style="margin-left:auto">
@@ -1148,7 +1143,6 @@ function toggleCruCat(c,btn){
   else{curCruCats.push(c);btn.classList.add('active')}
   updateCru();
 }
-function setCruTipo(t){curCruTipo=t;document.querySelectorAll('#cruTipoBtns button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');updateCru()}
 function setCruGran(g){curCruGran=g;document.querySelectorAll('#cruGranBtns button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');updateCru()}
 
 function initTransitTables(){
