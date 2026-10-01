@@ -80,7 +80,7 @@
 <body>
 <div class="header">
   <div><h1>Vocus Monitoring Dashboard</h1><div class="subtitle">Análise TCA — Folha Link | Filtros por Dia/Semana/Mês, Máquina e Classe</div></div>
-  <div style="text-align:right"><div class="period">Nov 2025 - Out 2026</div><div style="font-size:11px;opacity:.6;margin-top:4px">Atualizado: 01/10/2026 14:38</div></div>
+  <div style="text-align:right"><div class="period">Nov 2025 - Out 2026</div><div style="font-size:11px;opacity:.6;margin-top:4px">Atualizado: 01/10/2026 14:42</div></div>
 </div>
 <div class="container">
   <div class="tab-bar">
@@ -1181,7 +1181,55 @@ initCruCharts();
 initCruYearBtns();
 initTransitTables();
 updateCru();
+// === Persistência do estado da página (separador, filtros, botões, scroll) — RPS 01/10/2026 ===
+(function(){
+  const KEY='vocusDashState_v1';
+  const groupsSel='.tab-bar,.sub-tab-bar,.btn-group,[id$="Btns"],[id*="BtnsChart"],[id*="BtnsTable"],[id*="BtnsDonut"]';
+  const groups=()=>{const s=new Set();document.querySelectorAll(groupsSel).forEach(g=>{if(g.querySelector(':scope > button'))s.add(g)});return[...s]};
+  const btns=g=>[...g.querySelectorAll(':scope > button')];
+  let restoring=true;
+  function save(){
+    if(restoring)return;
+    try{
+      const st={v:1,groups:{},inputs:{},scroll:window.scrollY};
+      groups().forEach((g,i)=>{st.groups[(g.id||g.className)+'#'+i]=btns(g).map(b=>b.classList.contains('active')?1:0)});
+      document.querySelectorAll('input[id][type="date"],input[id][type="month"],select[id]').forEach(el=>{st.inputs[el.id]=el.value});
+      localStorage.setItem(KEY,JSON.stringify(st));
+    }catch(e){}
+  }
+  function restore(){
+    let st=null;
+    try{st=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+    if(!st||st.v!==1){restoring=false;return}
+    try{
+      Object.entries(st.inputs||{}).forEach(([id,v])=>{const el=document.getElementById(id);if(el&&v!=null)el.value=v});
+      const gs=groups();let tabBar=null,tabIdx=-1;
+      gs.forEach((g,i)=>{
+        const saved=(st.groups||{})[(g.id||g.className)+'#'+i];const bs=btns(g);
+        if(!saved||saved.length!==bs.length)return;
+        if(g.classList.contains('tab-bar')){tabBar=g;tabIdx=saved.indexOf(1);return}
+        if(g.id==='cruCatBtns'){
+          bs.forEach((b,k)=>{if(saved[k]&&!b.classList.contains('active'))b.click()});
+          bs.forEach((b,k)=>{if(!saved[k]&&b.classList.contains('active'))b.click()});
+          return;
+        }
+        const k=saved.indexOf(1);
+        if(k>=0&&!bs[k].classList.contains('active'))bs[k].click();
+      });
+      if(tabBar&&tabIdx>=0)btns(tabBar)[tabIdx].click();
+      else{updateCru();}
+      const y=st.scroll||0;
+      setTimeout(()=>{window.scrollTo(0,y);restoring=false},150);
+    }catch(e){restoring=false}
+  }
+  document.addEventListener('click',()=>setTimeout(save,0),true);
+  document.addEventListener('change',()=>setTimeout(save,0),true);
+  let t=null;window.addEventListener('scroll',()=>{clearTimeout(t);t=setTimeout(save,300)},{passive:true});
+  window.addEventListener('pagehide',save);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')save()});
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  restore();
+})();
 </script>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
